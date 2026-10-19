@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div id="host-logos" class="host-logos"></div>
+      <div>
+        <strong id="tournament-name">Tournament</strong>
+        <small id="tournament-tagline"></small>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Registration</a>
+      <span id="user-email" class="muted"></span>
+      <button id="logout" class="link" hidden>Sign out</button>
+    </nav>
+  </header>
+
+  <div class="page">
+  <aside id="sponsor-rail" class="rail" aria-label="Sponsors"></aside>
+  <main>
+    <section id="signed-out" class="card" hidden>
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tab-player" aria-selected="true" aria-controls="panel-player" data-tab="player">Player login</button>
+        <button role="tab" id="tab-owner" aria-selected="false" aria-controls="panel-owner" data-tab="owner" tabindex="-1">Team owner sign in</button>
+        <button role="tab" id="tab-admin" aria-selected="false" aria-controls="panel-admin" data-tab="admin" tabindex="-1">Admin sign in</button>
+      </div>
+
+      <div role="tabpanel" id="panel-player" aria-labelledby="tab-player">
+        <h1>Player login</h1>
+        <p>Sign in with the same email you registered with. After team allotment you'll see your team and teammates.</p>
+        <a class="btn" href="/auth/login?as=player">Sign in as player</a>
+      </div>
+
+      <div role="tabpanel" id="panel-owner" aria-labelledby="tab-owner" hidden>
+        <h1>Team owner sign in</h1>
+        <p>Use the Google account whose email the admin set as your team's owner. You'll see your team's players after signing in.</p>
+        <a class="btn" href="/auth/login?as=owner">Sign in as team owner</a>
+      </div>
+
+      <div role="tabpanel" id="panel-admin" aria-labelledby="tab-admin" hidden>
+        <h1>Admin sign in</h1>
+        <p>For tournament admins only. Use the Google account that has been granted admin access.</p>
+        <a class="btn" href="/auth/login?as=admin">Sign in as admin</a>
+      </div>
+    </section>
+
+    <div id="role-notice" class="notice" role="status" hidden></div>
+
+    <section class="card" id="player-section" hidden>
+      <h2>My registration and team</h2>
+      <div id="player-body"></div>
+    </section>
+
+    <section class="card" id="owner-section" hidden>
+      <h2>My team's players</h2>
+      <div id="owner-registrations"></div>
+    </section>
+
+    <section class="card" id="admin-section" hidden>
+      <h2>All registrations</h2>
+      <p id="registration-counts" class="counts"></p>
+      <p><a class="btn" href="/api/registrations.csv" download>Download CSV</a></p>
+      <div id="all-registrations"></div>
+    </section>
+
+    <section class="card" id="admins-section" hidden>
+      <h2>Admins</h2>
+      <p class="muted">Admins can manage teams, sponsors, payments and other admins. Configured admins are set in the server settings and can't be removed here.</p>
+      <div id="admins-list"></div>
+
+      <h3>Add an admin</h3>
+      <form id="admin-form" novalidate>
+        <div class="grid">
+          <label>Admin email
+            <input name="email" type="email" required>
+            <span class="error" data-error-for="email"></span>
+          </label>
+        </div>
+        <button type="submit" class="btn">Make admin</button>
+        <p id="admin-status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="card" id="sponsors-section" hidden>
+      <h2>Sponsors</h2>
+      <div id="sponsors-admin"></div>
+
+      <h3>Add a sponsor</h3>
+      <form id="sponsor-form" method="post" enctype="multipart/form-data" novalidate>
+        <div class="grid">
+          <label>Sponsor name
+            <input name="name" maxlength="80" required>
+            <span class="error" data-error-for="name"></span>
+          </label>
+          <label>Sponsor logo
+            <input name="logo" type="file" accept="image/jpeg,image/png,image/webp" required>
+            <span class="error" data-error-for="logo"></span>
+          </label>
+        </div>
+        <button type="submit" class="btn">Add sponsor</button>
+        <p id="sponsor-status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="card" id="teams-section" hidden>
+      <h2>Teams</h2>
+      <div id="teams-list"></div>
+
+      <h3 id="team-form-title">Add a team</h3>
+      <form id="team-form" method="post" enctype="multipart/form-data" novalidate>
+        <div class="grid">
+          <label>Team name
+            <input name="name" maxlength="80" required>
+            <span class="error" data-error-for="name"></span>
+          </label>
+          <label>Owner name
+            <input name="owner_name" maxlength="80">
+            <span class="error" data-error-for="owner_name"></span>
+          </label>
+          <label>Owner email
+            <input name="owner_email" type="email" required>
+            <span class="error" data-error-for="owner_email"></span>
+          </label>
+          <label>Brand colour
+            <input name="primary_color" type="color" value="#1f6feb">
+            <span class="error" data-error-for="primary_color"></span>
+          </label>
+          <label>Team logo
+            <input name="logo" type="file" accept="image/jpeg,image/png,image/webp">
+            <small class="muted">Leave empty to use the placeholder logo.</small>
+            <span class="error" data-error-for="logo"></span>
+          </label>
+        </div>
+        <button type="submit" class="btn">Save team</button>
+        <button type="button" id="team-cancel" class="link" hidden>Cancel edit</button>
+        <p id="team-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <aside id="team-rail" class="rail" aria-label="Team owners"></aside>
+  </div>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

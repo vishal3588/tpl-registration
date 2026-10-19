@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: cricket-registration
+    runtime: node
+    plan: starter        # use "free" for testing; free instances sleep after ~15 min idle
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: STORAGE
+        value: google
+      - key: BASE_URL
+        sync: false      # https://<your-service>.onrender.com (set after first deploy)
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: ALLOWED_EMAIL_DOMAINS
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_SPREADSHEET_ID
+        sync: false
+      - key: GOOGLE_DRIVE_FOLDER_ID
+        sync: false
+      - key: GOOGLE_DRIVE_REFRESH_TOKEN
+        sync: false      # from `npm run setup:drive`
+      # Upload the service account JSON as a Render "Secret File" named service-account.json
+      # (appears at /etc/secrets/service-account.json at runtime).
+      - key: GOOGLE_SERVICE_ACCOUNT_KEY_FILE
+        value: /etc/secrets/service-account.json
+      - key: DEV_LOGIN
+        value: "false"

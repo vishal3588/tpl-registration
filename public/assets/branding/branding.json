@@ -1,0 +1,25 @@
+{
+  "tournamentName": "TPL (Tablers Premier League)",
+  "tagline": "Player registration",
+  "primaryColor": "#1f6feb",
+  "hostLogos": [
+    {
+      "name": "172 COSMO",
+      "logo": "assets/branding/172-cosmo.webp"
+    },
+    {
+      "name": "Round Table India",
+      "logo": "assets/branding/round-table-india.webp"
+    }
+  ],
+  "paymentQr": "assets/branding/payment-qr.jpg",
+  "paymentInstructions": "Pay the registration amount of Rs 2000 to ONE of the two accounts above, not both: (1) scan the QR code, which pays Suraj Kumar Mandal (SBI UPI), or (2) transfer to the Axis Bank account, which is in the name of Bangalore Cosmopolitan Round Table Association. Then upload a screenshot of that successful payment with your registration.",
+  "bankDetails": {
+    "accountName": "Bangalore Cosmopolitan Round Table Association",
+    "bankName": "Axis Bank",
+    "branch": "Infantry Road Branch",
+    "accountNumber": "926010006480354",
+    "ifsc": "UTIB0003412"
+  },
+  "registrationAmount": "Rs 2000"
+}

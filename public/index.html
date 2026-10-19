@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Player Registration</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div id="host-logos" class="host-logos"></div>
+      <div>
+        <strong id="tournament-name">Tournament</strong>
+        <small id="tournament-tagline"></small>
+      </div>
+    </div>
+    <nav>
+      <a class="btn-outline" href="/auth/login?as=player">Player login</a>
+      <a class="btn-outline" href="/auth/login?as=owner">Team owner login</a>
+      <a class="btn-outline" href="/auth/login?as=admin">Admin login</a>
+    </nav>
+  </header>
+
+  <div class="page">
+  <aside id="sponsor-rail" class="rail" aria-label="Sponsors"></aside>
+  <main>
+    <section class="card">
+      <h1>Player registration</h1>
+      <p class="muted">Fill in your player details below. Fields marked * are required.</p>
+      <form id="reg-form" method="post" enctype="multipart/form-data" novalidate>
+        <div class="grid">
+
+          <label class="span-2 required"><span>Email address <span class="req">*</span></span>
+            <input name="email" type="email" autocomplete="email" required>
+            <small class="muted">Use a Google-enabled email (Gmail or Google Workspace).</small>
+            <span class="error" data-error-for="email"></span>
+          </label>
+
+          <label class="required"><span>Player name <span class="req">*</span></span>
+            <input name="name" autocomplete="name" maxlength="60" required>
+            <span class="error" data-error-for="name"></span>
+          </label>
+
+          <label class="required"><span>Mobile number <span class="req">*</span></span>
+            <input name="contact" type="tel" autocomplete="tel" placeholder="98765 43210" required>
+            <span class="error" data-error-for="contact"></span>
+          </label>
+
+          <label class="required"><span>Table number <span class="req">*</span></span>
+            <input name="table_number" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 12" required>
+            <span class="error" data-error-for="table_number"></span>
+          </label>
+
+          <label class="required"><span>Jersey size <span class="req">*</span></span>
+            <select name="jersey_size" id="size-select" required></select>
+            <span class="error" data-error-for="jersey_size"></span>
+          </label>
+
+          <label class="required"><span>Jersey number <span class="req">*</span></span>
+            <input name="jersey_number" type="number" min="0" max="99" inputmode="numeric" required>
+            <span class="error" data-error-for="jersey_number"></span>
+          </label>
+
+          <label class="span-2">CricHeroes profile link (optional)
+            <input name="cricheroes_url" type="url" placeholder="https://cricheroes.in/player-profile/...">
+            <span class="error" data-error-for="cricheroes_url"></span>
+          </label>
+
+
+          <fieldset class="span-2 no-wrap">
+            <legend class="required">Are you left-handed or right-handed batsman?</legend>
+            <div class="stars">
+              <label><input type="radio" name="handedness" value="Left-handed" required> Left-handed</label>
+              <label><input type="radio" name="handedness" value="Right-handed" required> Right-handed</label>
+            </div>
+            <span class="error" data-error-for="handedness"></span>
+          </fieldset>
+
+          <fieldset class="span-2">
+            <legend class="required">What is your strength? (tick all that apply)</legend>
+            <div class="checks">
+              <label><input type="checkbox" name="strength" value="Batsman"> Batsman</label>
+              <label><input type="checkbox" name="strength" value="Bowler-Fast Pace"> Bowler-Fast Pace</label>
+              <label><input type="checkbox" name="strength" value="Bowler-Medium Pace"> Bowler-Medium Pace</label>
+              <label><input type="checkbox" name="strength" value="Bowler-Spinner"> Bowler-Spinner</label>
+              <label><input type="checkbox" name="strength" value="All Rounder"> All Rounder</label>
+              <label><input type="checkbox" name="strength" value="All Rounder-Batsman"> All Rounder-Batsman</label>
+              <label><input type="checkbox" name="strength" value="All Rounder-Bowler"> All Rounder-Bowler</label>
+            </div>
+            <span class="error" data-error-for="strength"></span>
+          </fieldset>
+
+          <label class="span-2 required"><span>Player photo <span class="req">*</span></span>
+            <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+            <small class="muted">JPG, PNG or WEBP, up to 5 MB.</small>
+            <span class="error" data-error-for="photo"></span>
+          </label>
+          <fieldset class="span-2">
+            <legend class="required">How would you rate your own game?</legend>
+            <div class="rating-list">
+              <label><input type="radio" name="rating" value="1" required> 1 ★ Tailender (occasional player)</label>
+              <label><input type="radio" name="rating" value="2" required> 2 ★ Club net player</label>
+              <label><input type="radio" name="rating" value="3" required> 3 ★ Regular club player</label>
+              <label><input type="radio" name="rating" value="4" required> 4 ★ Strong district player</label>
+              <label><input type="radio" name="rating" value="5" required> 5 ★ Top-order star</label>
+            </div>
+            <span class="error" data-error-for="rating"></span>
+          </fieldset>
+
+
+          <div class="span-2 payment-block">
+            <h3>Registration payment</h3>
+            <p class="amount">Registration amount: <strong id="registration-amount">Rs 2000</strong></p>
+            <div class="payment-options">
+              <div class="payment-option">
+                <h4>Option 1: Scan the QR code</h4>
+                <img id="payment-qr" src="assets/branding/payment-qr.jpg" alt="Bank payment QR code">
+              </div>
+              <div class="payment-option">
+                <h4>Option 2: Bank details</h4>
+                <table class="bank-table"><tbody id="bank-details"></tbody></table>
+              </div>
+            </div>
+            <p id="payment-instructions" class="muted"></p>
+          </div>
+
+          <label class="span-2 required"><span>Payment reference (UTR / UPI transaction ID) <span class="req">*</span></span>
+            <input name="payment_reference" maxlength="30" required>
+            <small class="muted">The 12-digit reference shown in your banking or UPI app after you pay.</small>
+            <span class="error" data-error-for="payment_reference"></span>
+          </label>
+
+          <label class="span-2 required"><span>Payment proof (screenshot of successful payment) <span class="req">*</span></span>
+            <input name="payment_proof" type="file" accept="image/jpeg,image/png,image/webp" required>
+            <small class="muted">Upload a screenshot of your successful payment. Your registration is not complete without it.</small>
+            <span class="error" data-error-for="payment_proof"></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn">Submit registration</button>
+        <p id="form-status" role="status"></p>
+      </form>
+    </section>
+
+
+  </main>
+  <aside id="team-rail" class="rail" aria-label="Team owners"></aside>
+  </div>
+
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>

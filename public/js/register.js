@@ -1,0 +1,54 @@
+import { $, api, esc, loadBranding } from './common.js';
+
+const form = $('#reg-form');
+const status = $('#form-status');
+
+init();
+
+async function init() {
+  const branding = await loadBranding();
+  $('#payment-qr').src = branding.paymentQr;
+  $('#payment-instructions').textContent = branding.paymentInstructions;
+  $('#bank-details').innerHTML = bankRows(branding.bankDetails);
+  $('#registration-amount').textContent = branding.registrationAmount;
+
+  const config = await api('/config');
+  $('#size-select').innerHTML = config.jerseySizes.map(s => `<option value="${s}">${s}</option>`).join('');
+}
+
+// Only rows that have a value are shown, so blank fields never appear on the page.
+function bankRows(details = {}) {
+  const labels = { accountName: 'Account name', bankName: 'Bank', branch: 'Branch', accountNumber: 'Account number', ifsc: 'IFSC', upiId: 'UPI ID' };
+  return Object.entries(labels)
+    .filter(([key]) => details[key])
+    .map(([key, label]) => `<tr><th>${label}</th><td>${esc(details[key])}</td></tr>`)
+    .join('');
+}
+
+function clearErrors() {
+  document.querySelectorAll('[data-error-for]').forEach(el => (el.textContent = ''));
+}
+
+function showErrors(errors) {
+  for (const [field, message] of Object.entries(errors)) {
+    const el = document.querySelector(`[data-error-for="${field}"]`);
+    if (el) el.textContent = message;
+  }
+}
+
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  clearErrors();
+  status.className = '';
+  status.textContent = 'Submitting…';
+  try {
+    await api('/registrations', { method: 'POST', body: new FormData(form) });
+    status.className = 'ok';
+    status.textContent = 'Registration submitted. Thank you! Your team will be confirmed by the tournament admin.';
+    form.reset();
+  } catch (err) {
+    status.className = 'fail';
+    status.textContent = err.body?.errors ? 'Please fix the highlighted fields.' : err.message;
+    if (err.body?.errors) showErrors(err.body.errors);
+  }
+});

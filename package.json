@@ -1,0 +1,24 @@
+{
+  "name": "cricket-registration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cricket tournament player registration portal",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "STORAGE=local node --test test/*.test.js",
+    "setup:drive": "node scripts/setup-drive.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "googleapis": "^186.0.0",
+    "multer": "^2.4.0"
+  }
+}
