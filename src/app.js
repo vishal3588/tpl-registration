@@ -8,6 +8,8 @@ import { apiRouter } from './routes.js';
 
 export function createApp() {
   const app = express();
+  // Render (and most hosts) sit behind a proxy that terminates HTTPS. Trust it so secure cookies work.
+  app.set('trust proxy', 1);
   app.use(express.json({ limit: '50kb' }));
   app.use(session({
     name: 'cricreg.sid',
