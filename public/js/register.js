@@ -5,7 +5,16 @@ const status = $('#form-status');
 
 init();
 
+// Shown when a Google account tried Team owner login but isn't registered as a team owner.
+function showDeniedNotice() {
+  if (new URLSearchParams(location.search).get('denied') !== 'owner') return;
+  const notice = $('#role-notice');
+  notice.textContent = 'This email is not registered as a team owner. Only the team owner emails set by the admin can sign in here. Please contact the admin.';
+  notice.hidden = false;
+}
+
 async function init() {
+  showDeniedNotice();
   const branding = await loadBranding();
   $('#payment-qr').src = branding.paymentQr;
   $('#payment-instructions').textContent = branding.paymentInstructions;

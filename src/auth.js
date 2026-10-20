@@ -64,7 +64,7 @@ authRouter.get('/callback', async (req, res) => {
   if (intent === 'owner') {
     const teams = await storage.listTeams();
     if (!teams.some(t => t.owner_email === normalised)) {
-      return res.redirect('/dashboard.html?denied=owner');
+      return res.redirect('/?denied=owner');
     }
   }
 

@@ -18,7 +18,6 @@ async function init() {
   const me = await api('/me').catch(() => null);
   if (!me) {
     $('#signed-out').hidden = false;
-    showDeniedNotice();
     return;
   }
 
@@ -47,14 +46,6 @@ async function init() {
     $('#owner-section').hidden = false;
     await refreshRegistrations('#owner-registrations', false);
   }
-}
-
-// Shown when a Google account tried Team owner login but isn't registered as a team owner.
-function showDeniedNotice() {
-  if (new URLSearchParams(location.search).get('denied') !== 'owner') return;
-  const notice = $('#role-notice');
-  notice.textContent = 'This email is not registered as a team owner. Only the team owner emails set by the admin can sign in here. Please contact the admin.';
-  notice.hidden = false;
 }
 
 // The sign-in tab the user chose (?as=owner|admin|player). Warn if the account doesn't have that role.
