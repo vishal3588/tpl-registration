@@ -10,6 +10,10 @@
     {
       "name": "Round Table India",
       "logo": "assets/branding/round-table-india.webp"
+    },
+    {
+      "name": "Good Vibes Only",
+      "logo": "assets/branding/good-vibes.png"
     }
   ],
   "paymentQr": "assets/branding/payment-qr.jpg",
