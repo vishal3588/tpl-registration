@@ -348,6 +348,9 @@ test('player sees their team and teammates without contact details', async () =>
   assert.equal(mine.status, 200);
   assert.equal(mine.body.registration.email, 'player1@example.com');
   assert.equal(mine.body.team.name, 'Blue Strikers');
+  assert.equal(mine.body.team.owner_email, 'owner@example.com');
+  assert.equal(mine.body.registration.payment_status, undefined);
+  assert.equal(mine.body.registration.payment_proof_url, undefined);
   assert.ok(mine.body.teammates.length >= 1);
   for (const mate of mine.body.teammates) {
     assert.equal(mate.contact, undefined);

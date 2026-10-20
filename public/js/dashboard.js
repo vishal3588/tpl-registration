@@ -64,7 +64,7 @@ function showRoleNotice(me) {
   notice.hidden = false;
 }
 
-// The signed-in player's own registration, team and teammates. Teammates never show contact details.
+// The signed-in player's registration, team (with owner) and teammates. Nothing else is shown.
 async function loadPlayerSection() {
   const el = $('#player-body');
   const { registration, team, teammates } = await api('/my-team');
@@ -73,12 +73,32 @@ async function loadPlayerSection() {
     return;
   }
 
-  const teamLine = team
-    ? `<p><span class="swatch" style="background:${esc(team.primary_color || '#ffffff')}"></span> <strong>${esc(team.name)}</strong> · Owner: ${esc(team.owner_name || '—')}</p>`
-    : '<p class="notice">Team allotment is pending. Your team will appear here once it is confirmed.</p>';
+  const details = `
+    <h3>My registration</h3>
+    <div class="table-wrap"><table>
+      <tbody>
+        <tr><th>Name</th><td>${esc(registration.name)}</td><th>Email</th><td>${esc(registration.email)}</td></tr>
+        <tr><th>Mobile</th><td>${esc(registration.contact)}</td><th>Table</th><td>${esc(registration.table_number)}</td></tr>
+        <tr><th>Jersey</th><td>#${esc(registration.jersey_number)} (${esc(registration.jersey_size)})</td><th>Rating</th><td>${esc(registration.rating)} ★</td></tr>
+        <tr><th>Hand</th><td>${esc(registration.handedness)}</td><th>Strength</th><td>${esc(registration.strength)}</td></tr>
+        <tr><th>Photo</th><td><a href="${esc(registration.photo_url)}" target="_blank" rel="noopener">View</a></td>
+          <th>CricHeroes</th><td>${registration.cricheroes_url ? `<a href="${esc(registration.cricheroes_url)}" target="_blank" rel="noopener">Profile</a>` : '<span class="muted">—</span>'}</td></tr>
+      </tbody>
+    </table></div>`;
+
+  const teamBlock = team
+    ? `<h3>My team</h3>
+       <div class="table-wrap"><table>
+         <tbody>
+           <tr><th>Team</th><td>${esc(team.name)}</td></tr>
+           <tr><th>Team owner</th><td>${esc(team.owner_name || '—')}</td></tr>
+           <tr><th>Owner email</th><td>${esc(team.owner_email)}</td></tr>
+         </tbody>
+       </table></div>`
+    : '<h3>My team</h3><p class="notice">Team allotment is pending. Your team will appear here once it is confirmed.</p>';
 
   const mates = team
-    ? (teammates.length
+    ? `<h3>My teammates</h3>${teammates.length
       ? `<div class="table-wrap"><table>
           <thead><tr><th>Photo</th><th>Name</th><th>Jersey</th><th>Size</th><th>Hand</th><th>Strength</th></tr></thead>
           <tbody>${teammates.map(m => `<tr>
@@ -90,15 +110,10 @@ async function loadPlayerSection() {
             <td>${esc(m.strength)}</td>
           </tr>`).join('')}</tbody>
         </table></div>`
-      : '<p class="muted">No teammates have been allotted to this team yet.</p>')
+      : '<p class="muted">No teammates have been allotted to this team yet.</p>'}`
     : '';
 
-  el.innerHTML = `
-    <p><strong>${esc(registration.name)}</strong> · Jersey #${esc(registration.jersey_number)} (${esc(registration.jersey_size)}) · ${esc(registration.handedness)} · ${esc(registration.strength)}</p>
-    <p>Payment: ${paymentPill(registration.payment_status)}</p>
-    ${teamLine}
-    <h3>${team ? 'My teammates' : ''}</h3>
-    ${mates}`;
+  el.innerHTML = details + teamBlock + mates;
 }
 
 // Staff sign-in tabs (team owner / admin). Each only changes the instructions; access is decided by the server.

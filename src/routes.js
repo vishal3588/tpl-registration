@@ -156,7 +156,22 @@ apiRouter.get('/my-team', requireUser, async (req, res) => {
   const registrations = await storage.listRegistrations();
   const mine = registrations.find(r => r.email === req.user.email);
   if (!mine) return res.json({ registration: null, team: null, teammates: [] });
-  if (!mine.team_id) return res.json({ registration: mine, team: null, teammates: [] });
+
+  // Only what the player entered. Payment details are not shown on the player's page.
+  const registration = {
+    name: mine.name,
+    email: mine.email,
+    contact: mine.contact,
+    table_number: mine.table_number,
+    jersey_size: mine.jersey_size,
+    jersey_number: mine.jersey_number,
+    cricheroes_url: mine.cricheroes_url,
+    rating: mine.rating,
+    handedness: mine.handedness,
+    strength: mine.strength,
+    photo_url: fileUrl(mine.photo_url),
+  };
+  if (!mine.team_id) return res.json({ registration, team: null, teammates: [] });
 
   const team = (await storage.listTeams()).find(t => t.id === mine.team_id) ?? null;
   const teammates = registrations
@@ -166,8 +181,8 @@ apiRouter.get('/my-team', requireUser, async (req, res) => {
       name, jersey_number, jersey_size, handedness, strength, photo_url: fileUrl(photo_url),
     }));
   res.json({
-    registration: mine,
-    team: team && { name: team.name, owner_name: team.owner_name, logo_url: logoUrl(team.logo_url), primary_color: team.primary_color },
+    registration,
+    team: team && { name: team.name, owner_name: team.owner_name, owner_email: team.owner_email },
     teammates,
   });
 });
