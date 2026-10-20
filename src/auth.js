@@ -58,7 +58,17 @@ authRouter.get('/callback', async (req, res) => {
     return res.status(403).send('This Google account is not allowed. Sign in with your organisation account.');
   }
   const intent = req.session.intent ?? 'player';
-  await signIn(req, { email: email.toLowerCase(), name: name || email });
+  const normalised = email.toLowerCase();
+
+  // Team owner login is only for emails the admin has registered as a team's owner. Nobody else gets a session.
+  if (intent === 'owner') {
+    const teams = await storage.listTeams();
+    if (!teams.some(t => t.owner_email === normalised)) {
+      return res.redirect('/dashboard.html?denied=owner');
+    }
+  }
+
+  await signIn(req, { email: normalised, name: name || email });
   res.redirect(`/dashboard.html?as=${intent}`);
 });
 
