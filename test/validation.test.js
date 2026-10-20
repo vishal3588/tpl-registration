@@ -99,6 +99,12 @@ test('payment reference is required and must look like a UTR or UPI ID', () => {
   assert.equal(validateRegistration({ ...valid, payment_reference: '123456' }, teams).errors.payment_reference, undefined);
 });
 
+test('CricHeroes share links and profile links are both accepted', () => {
+  assert.equal(validateRegistration({ ...valid, cricheroes_url: 'https://chshare.link/player/dT6zVF' }, teams).errors.cricheroes_url, undefined);
+  assert.equal(validateRegistration({ ...valid, cricheroes_url: 'https://cricheroes.in/player-profile/1' }, teams).errors.cricheroes_url, undefined);
+  assert.ok(validateRegistration({ ...valid, cricheroes_url: 'https://example.com/player/1' }, teams).errors.cricheroes_url);
+});
+
 test('team must exist', () => {
   assert.ok(validateRegistration({ ...valid, team_id: 'nope' }, teams).errors.team_id);
 });

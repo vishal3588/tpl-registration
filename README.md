@@ -80,7 +80,7 @@ Do not reorder columns. Add new fields at the end only, and update `SCHEMA` in `
 - **Mobile format:** Indian numbers (10 digits, starting 6–9, optional +91 or 0). Change `MOBILE_RE` in `src/validation.js` for other countries.
 - **Table number:** treated as a numeric seating or table reference (1–9999). Confirm this is what you meant.
 - **Jersey number:** 0–99, unique within a team. Change the limits in `src/validation.js` if needed.
-- **CricHeroes domains:** `cricheroes.in` and `cricheroes.com`. Override with `CRICHEROES_HOSTS`.
+- **CricHeroes domains:** `cricheroes.in`, `cricheroes.com` and the share-link domain `chshare.link` are always accepted. `CRICHEROES_HOSTS` can add more hosts.
 - **Photo visibility (Google mode):** player photos and payment screenshots stay private in Drive. Team and sponsor logos are made viewable by anyone with the link so they show on the public pages.
 - **Payment:** the app shows the QR and records paid/pending status. Admins confirm payment manually; there is no bank reconciliation.
 - **Not included:** confirmation emails, payment-gateway integration, and CSV export. The Sheet itself serves as the export.

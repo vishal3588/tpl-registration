@@ -18,7 +18,8 @@ export const config = {
   // Restricts Google sign-in to these email domains (e.g. "smarsh.com"). Empty = any Google account.
   allowedDomains: list(process.env.ALLOWED_EMAIL_DOMAINS),
   // Hosts accepted for the CricHeroes profile link.
-  cricheroesHosts: list(process.env.CRICHEROES_HOSTS || 'cricheroes.in,cricheroes.com'),
+  // Profile links and share links are always accepted, whatever CRICHEROES_HOSTS says.
+  cricheroesHosts: [...new Set([...list(process.env.CRICHEROES_HOSTS || 'cricheroes.in,cricheroes.com'), 'chshare.link'])],
   // Dev-only email sign-in without Google. Never enable in production.
   devLogin: process.env.DEV_LOGIN === 'true',
   dataFile: path.join(dataDir, 'db.json'),
