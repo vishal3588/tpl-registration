@@ -5,7 +5,7 @@ export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 export const HANDEDNESS = ['Left-handed', 'Right-handed'];
 export const STRENGTHS = [
   'Batsman', 'Bowler-Fast Pace', 'Bowler-Medium Pace', 'Bowler-Spinner',
-  'All Rounder', 'All Rounder-Batsman', 'All Rounder-Bowler',
+  'All Rounder', 'All Rounder-Batsman', 'All Rounder-Bowler', 'Wicket Keeper',
 ];
 
 const NAME_RE = /^[\p{L}\p{M}][\p{L}\p{M} .'-]*$/u;
