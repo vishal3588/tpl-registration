@@ -60,7 +60,8 @@ apiRouter.get('/files/:id', requireUser, async (req, res) => {
   const isPhoto = reg.photo_url?.includes(id);
   const allowed = roles.includes('admin')
     || reg.email === req.user.email
-    || (isPhoto && reg.team_id && (ownedTeamIds.includes(reg.team_id) || mine?.team_id === reg.team_id));
+    || (reg.team_id && ownedTeamIds.includes(reg.team_id))
+    || (isPhoto && reg.team_id && mine?.team_id === reg.team_id);
   if (!allowed) return res.status(403).json({ error: 'You do not have access to this file' });
 
   try {

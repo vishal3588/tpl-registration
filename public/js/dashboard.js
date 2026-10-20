@@ -144,7 +144,7 @@ async function refreshRegistrations(selector, isAdmin) {
     <div class="table-wrap"><table>
       <thead><tr>
         <th>Photo</th><th>Name</th><th>Team</th><th>Jersey</th><th>Size</th>
-        <th>Contact</th><th>Table</th><th>Hand</th><th>Strength</th><th>Rating</th><th>CricHeroes</th><th>Payment</th><th>Payment proof</th>${isAdmin ? '<th>Payment ref</th>' : ''}
+        <th>Contact</th><th>Table</th><th>Hand</th><th>Strength</th><th>Rating</th><th>CricHeroes</th>${isAdmin ? '<th>Payment</th>' : ''}<th>Payment proof</th><th>Payment ref</th>
       </tr></thead>
       <tbody>${registrations.map(r => rowHtml(r, isAdmin, teams)).join('')}</tbody>
     </table></div>`;
@@ -177,9 +177,9 @@ function rowHtml(r, isAdmin, teams) {
     <td>${esc(r.strength)}</td>
     <td>${esc(r.rating)} ★</td>
     <td>${r.cricheroes_url ? `<a href="${esc(r.cricheroes_url)}" target="_blank" rel="noopener">Profile</a>` : '<span class="muted">—</span>'}</td>
-    <td>${payment}</td>
+    ${isAdmin ? `<td>${payment}</td>` : ''}
     <td>${proof}</td>
-    ${isAdmin ? `<td>${esc(r.payment_reference)}</td>` : ''}
+    <td>${esc(r.payment_reference)}</td>
   </tr>`;
 }
 
