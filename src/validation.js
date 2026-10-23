@@ -72,7 +72,8 @@ export function validateRegistration(body, teams) {
   if (!strengths.length) errors.strength = 'Select at least one strength.';
 
   // UTR / UPI transaction IDs: letters and digits (usually 12 digits). Stored in upper case.
-  const paymentReference = String(body.payment_reference ?? '').trim().toUpperCase();
+  // Spaces are removed so references copied from an app (for example "UTR 1234 5678 9012") are accepted.
+  const paymentReference = String(body.payment_reference ?? '').replace(/\s+/g, '').toUpperCase();
   if (!/^[A-Z0-9-]{6,30}$/.test(paymentReference)) {
     errors.payment_reference = 'Enter the transaction reference (UTR or UPI ID) from your payment app.';
   }

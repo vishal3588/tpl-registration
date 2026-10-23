@@ -97,6 +97,7 @@ test('payment reference is required and must look like a UTR or UPI ID', () => {
   assert.ok(validateRegistration({ ...valid, payment_reference: '' }, teams).errors.payment_reference);
   assert.ok(validateRegistration({ ...valid, payment_reference: 'a b' }, teams).errors.payment_reference);
   assert.equal(validateRegistration({ ...valid, payment_reference: '123456' }, teams).errors.payment_reference, undefined);
+  assert.equal(validateRegistration({ ...valid, payment_reference: 'UTR 1234 5678 9012' }, teams).value.payment_reference, 'UTR123456789012');
 });
 
 test('CricHeroes share links and profile links are both accepted', () => {

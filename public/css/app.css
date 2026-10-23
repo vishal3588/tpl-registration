@@ -96,6 +96,10 @@ main { max-width: 960px; margin: 24px auto; padding: 0 16px; display: grid; grid
   main { padding: 0; }
 }
 
+.success { text-align: center; }
+.success-message { font-size: 1.1rem; font-weight: 600; }
+.success img { display: block; width: 100%; max-width: 420px; margin: 16px auto; border-radius: 10px; border: 1px solid var(--line); }
+.success .venue { font-size: 1rem; }
 .payment-block { text-align: center; }
 .payment-block .amount { font-size: 1.05rem; margin: 0 0 12px; }
 .payment-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; margin-top: 8px; }

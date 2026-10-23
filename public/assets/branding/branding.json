@@ -25,5 +25,10 @@
     "accountNumber": "926010006480354",
     "ifsc": "UTIB0003412"
   },
-  "registrationAmount": "Rs 2000"
+  "registrationAmount": "Rs 2000",
+  "postRegistration": {
+    "flyer": "assets/branding/tpl-auction-flyer.jpg",
+    "venue": "EAGLETON SPORTS PARK & CRICKET ACADEMY, BENGALURU",
+    "message": "Thanks for registering with us! See you at the TPL on 12th December 2026."
+  }
 }

@@ -21,6 +21,11 @@ async function init() {
   $('#bank-details').innerHTML = bankRows(branding.bankDetails);
   $('#registration-amount').textContent = branding.registrationAmount;
 
+  const post = branding.postRegistration;
+  $('#success-flyer').src = post.flyer;
+  $('#success-venue').textContent = post.venue;
+  $('#success-message').textContent = post.message;
+
   const config = await api('/config');
   $('#size-select').innerHTML = config.jerseySizes.map(s => `<option value="${s}">${s}</option>`).join('');
 }
@@ -32,6 +37,18 @@ function bankRows(details = {}) {
     .filter(([key]) => details[key])
     .map(([key, label]) => `<tr><th>${label}</th><td>${esc(details[key])}</td></tr>`)
     .join('');
+}
+
+// Pasted references often carry spaces; clean them as they go in.
+form.elements.payment_reference.addEventListener('input', event => {
+  event.target.value = event.target.value.replace(/\s+/g, '').toUpperCase();
+});
+
+// Replaces the form with the flyer, venue and message once the registration is saved.
+function showSuccess() {
+  form.closest('section').hidden = true;
+  $('#success-panel').hidden = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function clearErrors() {
@@ -52,9 +69,7 @@ form.addEventListener('submit', async event => {
   status.textContent = 'Submitting…';
   try {
     await api('/registrations', { method: 'POST', body: new FormData(form) });
-    status.className = 'ok';
-    status.textContent = 'Registration submitted. Thank you! Your team will be confirmed by the tournament admin.';
-    form.reset();
+    showSuccess();
   } catch (err) {
     status.className = 'fail';
     status.textContent = err.body?.errors ? 'Please fix the highlighted fields.' : err.message;
