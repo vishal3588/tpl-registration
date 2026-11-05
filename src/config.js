@@ -22,6 +22,11 @@ export const config = {
   cricheroesHosts: [...new Set([...list(process.env.CRICHEROES_HOSTS || 'cricheroes.in,cricheroes.com'), 'chshare.link'])],
   // Dev-only email sign-in without Google. Never enable in production.
   devLogin: process.env.DEV_LOGIN === 'true',
+  // Outbound webhook to the calling service when a team is assigned to a player.
+  callingWebhook: {
+    url: process.env.CALLING_SERVICE_URL || '',
+    secret: process.env.CALLING_SERVICE_SECRET || '',
+  },
   dataFile: path.join(dataDir, 'db.json'),
   uploadsDir: path.join(root, 'uploads'),
   google: {

@@ -7,6 +7,7 @@ import { getRoles, isAdmin, requireRole, requireUser } from './auth.js';
 import {
   EMAIL_RE, IMAGE_MAX_BYTES, JERSEY_SIZES, detectImage, imageError, validateRegistration, validateSponsor, validateTeam,
 } from './validation.js';
+import { notifyTeamAssigned } from './webhook.js';
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: IMAGE_MAX_BYTES, files: 2 } });
 const nowIso = () => new Date().toISOString();
@@ -245,6 +246,7 @@ apiRouter.patch('/registrations/:id/team', requireUser, requireRole('admin'), as
 
   const updated = { ...existing, team_id: team?.id ?? '', team_name: team?.name ?? '', updated_at: nowIso() };
   await storage.saveRegistration(updated);
+  if (team) notifyTeamAssigned(updated, team);
   res.json(updated);
 });
 
