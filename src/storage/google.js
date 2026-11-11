@@ -9,7 +9,7 @@ import { config } from '../config.js';
 const SCHEMA = {
   teams: {
     tab: 'Teams',
-    columns: ['id', 'name', 'owner_email', 'logo_url', 'primary_color', 'created_at', 'owner_name'],
+    columns: ['id', 'name', 'owner_email', 'logo_url', 'primary_color', 'created_at', 'owner_name', 'brand_name', 'marquee_player'],
     numeric: [],
   },
   sponsors: {
