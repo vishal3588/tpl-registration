@@ -220,10 +220,12 @@ async function loadTeams() {
   }
   el.innerHTML = `
     <div class="table-wrap"><table>
-      <thead><tr><th>Logo</th><th>Team</th><th>Owner</th><th>Owner email</th><th>Colour</th><th></th></tr></thead>
+      <thead><tr><th>Logo</th><th>Team</th><th>Brand</th><th>Marquee player</th><th>Owner</th><th>Owner email</th><th>Colour</th><th></th></tr></thead>
       <tbody>${teams.map(t => `<tr>
         <td><img class="thumb" src="${esc(t.logo_url || PLACEHOLDER_LOGO)}" alt=""></td>
         <td>${esc(t.name)}</td>
+        <td>${esc(t.brand_name || '—')}</td>
+        <td>${esc(t.marquee_player || '—')}</td>
         <td>${esc(t.owner_name)}</td>
         <td>${esc(t.owner_email)}</td>
         <td><span class="swatch" style="background:${esc(t.primary_color || '#ffffff')}"></span></td>
@@ -241,6 +243,8 @@ function startEditTeam(team) {
   teamForm.elements.name.value = team.name;
   teamForm.elements.owner_name.value = team.owner_name ?? '';
   teamForm.elements.owner_email.value = team.owner_email;
+  teamForm.elements.brand_name.value = team.brand_name ?? '';
+  teamForm.elements.marquee_player.value = team.marquee_player ?? '';
   teamForm.elements.primary_color.value = team.primary_color || '#1f6feb';
   teamForm.elements.logo.value = '';
   $('#team-form-title').textContent = `Edit ${team.name}`;

@@ -21,6 +21,8 @@ export async function notifyTeamAssigned(registration, team) {
       id: team.id,
       name: team.name,
       owner_name: team.owner_name,
+      brand_name: team.brand_name || '',
+      marquee_player: team.marquee_player || '',
     },
     jersey_number: registration.jersey_number,
     table_number: registration.table_number,

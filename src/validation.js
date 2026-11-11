@@ -116,7 +116,13 @@ export function validateTeam(body) {
   const owner_name = String(body.owner_name ?? '').trim();
   if (owner_name.length > 80) errors.owner_name = 'Owner name must be 80 characters or fewer.';
 
-  return { errors, value: { name, owner_name, owner_email, primary_color } };
+  const brand_name = String(body.brand_name ?? '').trim();
+  if (brand_name.length > 80) errors.brand_name = 'Brand name must be 80 characters or fewer.';
+
+  const marquee_player = String(body.marquee_player ?? '').trim();
+  if (marquee_player.length > 80) errors.marquee_player = 'Marquee player name must be 80 characters or fewer.';
+
+  return { errors, value: { name, owner_name, owner_email, primary_color, brand_name, marquee_player } };
 }
 
 export function validateSponsor(body) {
