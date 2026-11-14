@@ -3,7 +3,7 @@ import { config } from './config.js';
 
 // Returns { ok: true } on success, { ok: false, error } on failure.
 // Never throws — callers that fire-and-forget can ignore the return value.
-export async function notifyTeamAssigned(registration, team) {
+export async function notifyTeamAssigned(registration, team = null) {
   const { url, secret } = config.callingWebhook;
   if (!url || !secret) return { ok: false, error: 'Webhook not configured' };
 
@@ -18,11 +18,11 @@ export async function notifyTeamAssigned(registration, team) {
       email: registration.email,
     },
     team: {
-      id: team.id,
-      name: team.name,
-      owner_name: team.owner_name,
-      brand_name: team.brand_name || '',
-      marquee_player: team.marquee_player || '',
+      id: team?.id || '',
+      name: team?.name || '',
+      owner_name: team?.owner_name || '',
+      brand_name: team?.brand_name || '',
+      marquee_player: team?.marquee_player || '',
     },
     jersey_number: registration.jersey_number,
     table_number: registration.table_number,
