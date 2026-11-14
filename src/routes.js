@@ -260,15 +260,26 @@ apiRouter.post('/registrations/:id/invite', requireUser, requireRole('admin'), a
   res.json({ ok: true });
 });
 
-// Admin triggers calls to all registered players via the calling service webhook, one by one.
+// Admin triggers calls to all registered players in batches of 5, 30 s apart.
 apiRouter.post('/registrations/invite', requireUser, requireRole('admin'), async (req, res) => {
+  const BATCH_SIZE = 5;
+  const BATCH_DELAY_MS = 30_000;
+
   const [registrations, teams] = await Promise.all([storage.listRegistrations(), storage.listTeams()]);
   let sent = 0, failed = 0;
-  for (const registration of registrations) {
-    const team = teams.find(t => t.id === registration.team_id) ?? null;
-    const { ok } = await notifyTeamAssigned(registration, team);
-    if (ok) sent++; else failed++;
+
+  for (let i = 0; i < registrations.length; i += BATCH_SIZE) {
+    const batch = registrations.slice(i, i + BATCH_SIZE);
+    const results = await Promise.all(
+      batch.map(r => notifyTeamAssigned(r, teams.find(t => t.id === r.team_id) ?? null)),
+    );
+    results.forEach(({ ok }) => { if (ok) sent++; else failed++; });
+
+    if (i + BATCH_SIZE < registrations.length) {
+      await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS));
+    }
   }
+
   res.json({ total: registrations.length, sent, failed });
 });
 

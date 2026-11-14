@@ -232,7 +232,7 @@ async function onInviteAll() {
   const button = $('#invite-all');
   const status = $('#invite-status');
   button.disabled = true;
-  status.textContent = 'Sending…';
+  status.textContent = 'Sending in batches of 5 — please wait…';
   try {
     const { total, sent, failed } = await api('/registrations/invite', { method: 'POST' });
     status.textContent = failed
