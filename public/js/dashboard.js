@@ -32,7 +32,7 @@ async function init() {
     $('#teams-section').hidden = false;
     $('#sponsors-section').hidden = false;
     $('#admins-section').hidden = false;
-    $('#all-registrations').onclick = onPaymentClick;
+    $('#all-registrations').onclick = e => { onPaymentClick(e); onInviteClick(e); };
     $('#all-registrations').onchange = onTeamChange;
     $('#sponsors-admin').onclick = onSponsorRemove;
     $('#admins-list').onclick = onAdminRemove;
@@ -144,7 +144,7 @@ async function refreshRegistrations(selector, isAdmin) {
     <div class="table-wrap"><table>
       <thead><tr>
         <th>Photo</th><th>Name</th><th>Team</th><th>Jersey</th><th>Size</th>
-        <th>Contact</th><th>Table</th><th>Hand</th><th>Strength</th><th>Rating</th><th>CricHeroes</th>${isAdmin ? '<th>Payment</th>' : ''}<th>Payment proof</th><th>Payment ref</th>
+        <th>Contact</th><th>Table</th><th>Hand</th><th>Strength</th><th>Rating</th><th>CricHeroes</th>${isAdmin ? '<th>Payment</th><th>Invite</th>' : ''}<th>Payment proof</th><th>Payment ref</th>
       </tr></thead>
       <tbody>${registrations.map(r => rowHtml(r, isAdmin, teams)).join('')}</tbody>
     </table></div>`;
@@ -177,7 +177,7 @@ function rowHtml(r, isAdmin, teams) {
     <td>${esc(r.strength)}</td>
     <td>${esc(r.rating)} ★</td>
     <td>${r.cricheroes_url ? `<a href="${esc(r.cricheroes_url)}" target="_blank" rel="noopener">Profile</a>` : '<span class="muted">—</span>'}</td>
-    ${isAdmin ? `<td>${payment}</td>` : ''}
+    ${isAdmin ? `<td>${payment}</td><td>${inviteButton(r)}</td>` : ''}
     <td>${proof}</td>
     <td>${esc(r.payment_reference)}</td>
   </tr>`;
@@ -185,6 +185,11 @@ function rowHtml(r, isAdmin, teams) {
 
 function paymentPill(status) {
   return `<span class="pill ${status === 'paid' ? 'paid' : 'pending'}">${status === 'paid' ? 'Paid' : 'Pending'}</span>`;
+}
+
+function inviteButton(r) {
+  if (!r.team_id) return '<span class="muted" title="Assign a team first">—</span>';
+  return `<button class="link" data-invite="${esc(r.id)}">Invite</button>`;
 }
 
 async function onTeamChange(event) {
@@ -209,6 +214,21 @@ async function onPaymentClick(event) {
     body: JSON.stringify({ payment_status: button.dataset.next }),
   });
   await refreshRegistrations('#all-registrations', true);
+}
+
+async function onInviteClick(event) {
+  const button = event.target.closest('button[data-invite]');
+  if (!button) return;
+  button.disabled = true;
+  button.textContent = 'Sending…';
+  try {
+    await api(`/registrations/${button.dataset.invite}/invite`, { method: 'POST' });
+    button.textContent = 'Sent';
+  } catch (err) {
+    button.textContent = 'Failed';
+    button.title = err.message;
+    button.disabled = false;
+  }
 }
 
 async function loadTeams() {

@@ -1,11 +1,11 @@
 import crypto from 'node:crypto';
 import { config } from './config.js';
 
-// Fires once after a team is assigned to a player. Never throws — a webhook failure
-// must not fail the admin's team-assignment request.
+// Returns { ok: true } on success, { ok: false, error } on failure.
+// Never throws — callers that fire-and-forget can ignore the return value.
 export async function notifyTeamAssigned(registration, team) {
   const { url, secret } = config.callingWebhook;
-  if (!url || !secret) return;
+  if (!url || !secret) return { ok: false, error: 'Webhook not configured' };
 
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const payload = JSON.stringify({
@@ -42,9 +42,13 @@ export async function notifyTeamAssigned(registration, team) {
       signal: AbortSignal.timeout(5000),
     });
     if (!res.ok) {
-      console.error(`[webhook] calling service returned ${res.status} for registration ${registration.id}`);
+      const msg = `Calling service returned ${res.status}`;
+      console.error(`[webhook] ${msg} for registration ${registration.id}`);
+      return { ok: false, error: msg };
     }
+    return { ok: true };
   } catch (err) {
     console.error(`[webhook] failed to notify calling service for registration ${registration.id}:`, err.message);
+    return { ok: false, error: err.message };
   }
 }
