@@ -250,6 +250,16 @@ apiRouter.patch('/registrations/:id/team', requireUser, requireRole('admin'), as
   res.json(updated);
 });
 
+// Admin triggers a call to a single player via the calling service webhook.
+apiRouter.post('/registrations/:id/invite', requireUser, requireRole('admin'), async (req, res) => {
+  const registration = (await storage.listRegistrations()).find(r => r.id === req.params.id);
+  if (!registration) return res.status(404).json({ error: 'Registration not found' });
+  const team = registration.team_id ? (await storage.listTeams()).find(t => t.id === registration.team_id) ?? null : null;
+  const { ok, error } = await notifyTeamAssigned(registration, team);
+  if (!ok) return res.status(502).json({ error: error || 'Webhook delivery failed' });
+  res.json({ ok: true });
+});
+
 // Admin triggers calls to all registered players via the calling service webhook, one by one.
 apiRouter.post('/registrations/invite', requireUser, requireRole('admin'), async (req, res) => {
   const [registrations, teams] = await Promise.all([storage.listRegistrations(), storage.listTeams()]);
